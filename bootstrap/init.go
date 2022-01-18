@@ -5,7 +5,7 @@ import (
 	"forest/config"
 	"forest/db"
 	"forest/log"
-	"forest/support"
+	"forest/utils"
 	"time"
 )
 
@@ -29,7 +29,7 @@ func InitModule(modules []string) error {
 		return err
 	}
 	// 加载base配置
-	if support.InArrayString("base", modules) {
+	if utils.InArrayString("base", modules) {
 		if err := config.InitBaseConf(config.GetConfPath("base")); err != nil {
 			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitBaseConf:"+err.Error())
 		}
@@ -52,7 +52,7 @@ func InitModule(modules []string) error {
 	defer log.Flush()
 
 	// 加载mysql配置并初始化实例
-	if support.InArrayString("mysql", modules) {
+	if utils.InArrayString("mysql", modules) {
 		mysqlPath:=config.GetConfPath("mysql")
 		MysqlConfMap := &db.MysqlMapConf{}
 		err = config.ParseConfig(mysqlPath, MysqlConfMap)
@@ -65,7 +65,7 @@ func InitModule(modules []string) error {
 		}
 	}
 
-	if support.InArrayString("mongodb", modules) {
+	if utils.InArrayString("mongodb", modules) {
 		mongodbPath := config.GetConfPath("mongodb")
 		MongodbConf := &db.MongodbConf{}
 		err = config.ParseKeyConfig("mongodb",mongodbPath, MongodbConf)
@@ -79,7 +79,7 @@ func InitModule(modules []string) error {
 	}
 
 	// 加载redis配置并初始化实例
-	if support.InArrayString("redis", modules) {
+	if utils.InArrayString("redis", modules) {
 
 		if err = db.InitRedisConf(config.ConfBase.RedisConfig.Addr, config.ConfBase.RedisConfig.Password); err != nil {
 			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitRedisDBPool:"+err.Error())
