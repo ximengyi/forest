@@ -1,0 +1,12 @@
+# this is mysql config
+[mysql]
+    [mysql.default]
+        host="127.0.0.1:3306"
+        username="root"
+        password="root"
+        database="forest"
+        driver_name = "mysql"
+        max_open_conn = 20 
+        max_idle_conn = 10
+        max_conn_life_time = 100
+        log_level =4
