@@ -260,6 +260,7 @@ func New(opts *Options) *zapLogger {
 		EncoderConfig:    encoderConfig,
 		OutputPaths:      opts.OutputPaths,
 		ErrorOutputPaths: opts.ErrorOutputPaths,
+
 	}
 
 	var err error

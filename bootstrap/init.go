@@ -6,6 +6,7 @@ import (
 	"forest/db"
 	"forest/log"
 	"forest/utils"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"time"
 )
 
@@ -34,6 +35,13 @@ func InitModule(modules []string) error {
 			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitBaseConf:"+err.Error())
 		}
 	}
+	lumberJackLogger := &lumberjack.Logger{
+		Filename:   "/opt/logs/test.log",
+		MaxSize:    1,
+		MaxBackups: 5,
+		MaxAge:     30,
+		Compress:   false,
+	}
 
 	opts := &log.Options{
 		Level:             config.ConfBase.Log.Level,
@@ -44,6 +52,7 @@ func InitModule(modules []string) error {
 		DisableStacktrace: config.ConfBase.Log.DisableStacktrace,
 		OutputPaths:       config.ConfBase.Log.OutputPaths,
 		ErrorOutputPaths:  config.ConfBase.Log.ErrorOutputPaths,
+		WriteSyncer:       lumberJackLogger,
 	}
 
 
