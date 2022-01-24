@@ -20,7 +20,6 @@ package log
 
 import (
 	"fmt"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"strings"
 
 	"encoding/json"
@@ -55,7 +54,6 @@ type Options struct {
 	EnableColor       bool     `json:"enable-color"       mapstructure:"enable-color"`
 	Development       bool     `json:"development"        mapstructure:"development"`
 	Name              string   `json:"name"               mapstructure:"name"`
-	WriteSyncer      *lumberjack.Logger `json:"write-syncer" mapstructure:"write-syncer"`
 }
 
 // NewOptions creates a Options object with default parameters.
