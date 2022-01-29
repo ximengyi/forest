@@ -14,7 +14,7 @@ import (
 func main() {
 
 	//err :=bootstrap.Init("./conf/local/")
-	err := bootstrap.InitModule("./env/local/", []string{"base", "mysql", "redis"})
+	err := bootstrap.InitModule( []string{"base", "mysql", "redis"})
 
 	if err != nil {
 		log.Info("bootstrap init env fail check it  ")
