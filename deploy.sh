@@ -1,0 +1,1 @@
+docker run -p 9006:9006 -e APP_ENV="devlop" --name forest-devlop  -v /opt/logs:/opt/logs -d 10f5264a1a27

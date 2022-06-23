@@ -1,18 +1,17 @@
 package main
 
 import (
-	"forest/bootstrap"
-	"forest/log"
-	"forest/router"
-	"forest/server"
+	"forest/internal/pkg/server"
+	"forest/internal/router"
+	"forest/pkg/bootstrap"
+	"forest/pkg/log"
 	"os"
 )
 
-
 func main() {
 
-
-	err := bootstrap.InitModule([]string{"base", "mysql", "redis","mongodb"})
+	//err := bootstrap.InitModule([]string{"base", "mysql", "redis", "mongodb"})
+	err := bootstrap.InitModule([]string{"base", "mysql", "redis"})
 	if err != nil {
 		log.Info("bootstrap init env fail check it  ")
 		os.Exit(1)
@@ -21,6 +20,4 @@ func main() {
 	route := router.InitRouter()
 	server.HttpServerRun(route)
 
-
 }
-
