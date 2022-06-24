@@ -2,6 +2,7 @@ package response
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"forest/internal/constant"
 	"forest/pkg/bootstrap"
@@ -10,12 +11,15 @@ import (
 	"strings"
 )
 
+
+
 type Response struct {
-	ErrorCode int         `json:"code"`
-	ErrorMsg  string      `json:"message"`
-	Success   bool        `json:"success"`
-	Data      interface{} `json:"data"`
+	Code      int         `json:"Code"`
+	Message   string      `json:"Message"`
+	RequestId string      `json:"RequestId"`
+	Data      interface{} `json:"Data"`
 }
+
 
 type LogResponse struct {
 	Response
@@ -36,7 +40,7 @@ func Error(c *gin.Context, code int, err error) {
 		stack = strings.Replace(fmt.Sprintf("%+v", err), err.Error()+"\n", "", -1)
 	}
 
-	resp := &Response{ErrorCode: code, Success: false, ErrorMsg: err.Error(), Data: ""}
+	resp := &Response{Code: code, RequestId: traceId, Message: err.Error(), Data: ""}
 	c.JSON(200, resp)
 	logResp := &LogResponse{
 		Response: *resp,
@@ -56,7 +60,7 @@ func Success(c *gin.Context, data interface{}) {
 		traceId = traceContext.TraceId
 	}
 
-	resp := &Response{ErrorCode: constant.SuccessCode, Success: true, ErrorMsg: "", Data: data}
+	resp := &Response{Code: constant.SuccessCode, RequestId: traceId, Message: "", Data: data}
 	c.JSON(200, resp)
 	logResp := &LogResponse{
 		Response: *resp,
@@ -74,7 +78,7 @@ func MessageSuccess(c *gin.Context, errorMsg string, data interface{}) {
 		traceId = traceContext.TraceId
 	}
 
-	resp := &Response{ErrorCode: constant.SuccessCode, Success: true, ErrorMsg: errorMsg, Data: data}
+	resp := &Response{Code: constant.SuccessCode,  RequestId: traceId, Message: errorMsg,  Data: data}
 	c.JSON(200, resp)
 	logResp := &LogResponse{
 		Response: *resp,
@@ -97,7 +101,7 @@ func ErrorMsg(c *gin.Context, code int, data string) {
 		stack = data
 	}
 
-	resp := &Response{ErrorCode: code, Success: false, ErrorMsg: data, Data: data}
+	resp := &Response{Code: code, RequestId: traceId, Message: data, Data: data}
 	c.JSON(200, resp)
 	logResp := &LogResponse{
 		Response: *resp,
@@ -107,4 +111,31 @@ func ErrorMsg(c *gin.Context, code int, data string) {
 	logResponse, _ := json.Marshal(logResp)
 	c.Set("response", logResponse)
 
+}
+
+
+func Error404(c *gin.Context ) {
+	err := errors.New("404 not found")
+	trace, _ := c.Get("trace")
+	traceContext, _ := trace.(*log.TraceContext)
+	traceId := ""
+	if traceContext != nil {
+		traceId = traceContext.TraceId
+	}
+
+	stack := ""
+	if c.Query("is_debug") == "1" || bootstrap.GetAppEnv() == "dev" {
+		stack = strings.Replace(fmt.Sprintf("%+v", err), err.Error()+"\n", "", -1)
+	}
+
+	resp := &Response{Code: 404, RequestId: traceId, Message: err.Error(), Data: ""}
+	c.JSON(200, resp)
+	logResp := &LogResponse{
+		Response: *resp,
+		TraceId:  traceId,
+		Stack:    stack,
+	}
+	logResponse, _ := json.Marshal(logResp)
+	c.Set("response", string(logResponse))
+	c.AbortWithError(404, err)
 }

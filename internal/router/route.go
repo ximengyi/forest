@@ -2,6 +2,8 @@ package router
 
 import (
 	"forest/internal/controller"
+	"forest/internal/response"
+
 	//"forest/config"
 	//"forest/docs"
 	"forest/internal/middleware"
@@ -65,6 +67,10 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	//docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	router := gin.Default()
+	router.Use(
+		middleware.RecoveryMiddleware(),
+		middleware.RequestLog(),
+	)
 	//router.Use(
 	//	    middleware.RecoveryMiddleware(),
 	//		middleware.RequestLog(),
@@ -91,6 +97,11 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	{
 		controller.ExampleRegister(apiAuthGroup)
 	}
+
+	router.NoRoute(func(c *gin.Context) {
+		response.Error404(c)
+		return
+	})
 
 	return router
 }
