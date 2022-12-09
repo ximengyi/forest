@@ -1,0 +1,58 @@
+app_name: locaname
+app_env: "local"
+debug_mode: true
+time_location: "Asia/Shanghai"
+
+
+http:
+  addr : ":9004"                       # 监听地址, default ":8700"
+  read_timeout : 10                   # 读取超时时长
+  write_timeout : 10                  # 写入超时时长
+  max_header_bytes : 20               # 最大的header大小，二进制位长度
+  allow_ip :                        # 白名单ip列表
+    - "127.0.0.1"
+    - "192.168.1.1"
+
+jwt:
+  key: "asdfasdf1234zxvasdfasdfasdf"
+  duration: 2678400
+
+redis:
+  addr : "127.0.0.1:6379"
+  password : ""
+  max_active : 100
+  max_idle : 100
+  down_grade : false
+
+log:
+  level : "atom"
+  format : "console"
+  enable_color : false
+  disable_caller : true
+  development    : true
+  disable_stacktrace : false
+  output_paths : "/opt/logs/local.log"
+  error_output_paths : "/opt/logs/error.log"
+
+
+mysql:
+  default :
+  host: "127.0.0.1:3306"
+  username: "root"
+  password: ""
+  database: "forest"
+  driver_name:  "mysql"
+  max_open_conn: 20
+  max_idle_conn: 10
+  max_conn_life_time:  100
+  log_level: 4
+
+mongodb:
+  host : "192.168.37.142:27017"
+  username: ""
+  password: ""
+  database: "forest"
+  max_pool_size: 100
+  max_open_conn: 2
+  max_conn_idle_time: 0
+  log_level: 4
