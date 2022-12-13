@@ -1,10 +1,13 @@
 package controller
 
 import (
+	"fmt"
 	"forest/internal/dao"
 	"forest/internal/response"
 	"forest/internal/verifier"
+	"forest/pkg/db"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 type ExampleController struct {
@@ -13,6 +16,23 @@ type ExampleController struct {
 func ExampleRegister(router *gin.RouterGroup) {
 	example := ExampleController{}
 	router.GET("/example", example.GetEnvExamples)
+	router.GET("/redis", example.RedisDemo)
+}
+
+func (example *ExampleController) RedisDemo(c *gin.Context) {
+
+	rdb, err := db.RedisConnFactory(0)
+	if err != nil {
+		fmt.Println(err)
+	}
+	key := "mytest"
+	rdb.Set(c, key, "hello redis is ok", 3600*time.Second)
+	res := rdb.Get(c, key)
+	fmt.Println(key)
+	response.Success(c, res.Val())
+
+	return
+
 }
 
 func (example *ExampleController) GetEnvExamples(c *gin.Context) {
