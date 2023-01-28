@@ -17,6 +17,7 @@ func main() {
 		os.Exit(1)
 	}
 	defer bootstrap.Destroy()
+
 	route := router.InitRouter()
 	server.HttpServerRun(route)
 

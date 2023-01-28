@@ -76,12 +76,11 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	//		middleware.RequestLog(),
 	//		middleware.TranslationMiddleware())
 	//
-	//router.GET("/ping", func(c *gin.Context) {
-	//	fmt.Println(c)
-	//	c.JSON(200, gin.H{
-	//		"message": "pong",
-	//	})
-	//})
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
 
 	//router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

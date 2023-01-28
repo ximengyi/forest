@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"forest/internal/constant"
-	"forest/pkg/bootstrap"
 	"forest/pkg/log"
 	"github.com/gin-gonic/gin"
+	"github.com/gookit/config/v2"
 	"strings"
 )
 
@@ -36,7 +36,7 @@ func Error(c *gin.Context, code int, err error) {
 	}
 
 	stack := ""
-	if c.Query("is_debug") == "1" || bootstrap.GetAppEnv() == "dev" {
+	if c.Query("is_debug") == "1" || config.String("app_env") == "dev" {
 		stack = strings.Replace(fmt.Sprintf("%+v", err), err.Error()+"\n", "", -1)
 	}
 
@@ -97,7 +97,7 @@ func ErrorMsg(c *gin.Context, code int, data string) {
 	}
 
 	stack := ""
-	if c.Query("is_debug") == "1" || bootstrap.GetAppEnv() == "dev" {
+	if c.Query("is_debug") == "1" || config.String("app_env") == "dev" {
 		stack = data
 	}
 
@@ -124,7 +124,7 @@ func Error404(c *gin.Context ) {
 	}
 
 	stack := ""
-	if c.Query("is_debug") == "1" || bootstrap.GetAppEnv() == "dev" {
+	if c.Query("is_debug") == "1" || config.String("app_env") == "dev" {
 		stack = strings.Replace(fmt.Sprintf("%+v", err), err.Error()+"\n", "", -1)
 	}
 

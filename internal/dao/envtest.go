@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"forest/pkg/db"
+	"forest/pkg/mysql"
 	"gorm.io/gorm"
 )
 
@@ -23,7 +23,7 @@ func (t *Envtest) TableName() string {
 
 func (t *Envtest) Dbtest() ([]ApiEnvtest, error) {
 	var envTestList []ApiEnvtest
-	db, _ := db.GetGormPool("default")
+	db := mysql.GormPool
 	err := db.Model(&Envtest{}).Find(&envTestList).Error
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func (t *Envtest) PageList(page int, pageSize int, conditions interface{}, args 
 	var results []Envtest
 	var count int64
 	offset := (page - 1) * pageSize
-	query, _ := db.GetGormPool("default")
+	query := mysql.GormPool
 	err := query.Model(&Envtest{}).Limit(pageSize).Offset(offset).Order("id desc").Find(&results).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, 0, err

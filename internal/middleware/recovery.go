@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"forest/internal/response"
-	"forest/pkg/config"
 	"forest/pkg/log"
 	"github.com/gin-gonic/gin"
+	"github.com/gookit/config/v2"
 	"runtime/debug"
 )
 
@@ -22,7 +22,7 @@ func RecoveryMiddleware() gin.HandlerFunc {
 					"stack": string(debug.Stack()),
 				})
 
-				if config.ConfBase.DebugMode != "debug" {
+				if config.String("debug_mode") != "debug" {
 					response.Error(c, 500, errors.New("内部错误"))
 					return
 				} else {
