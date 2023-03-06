@@ -89,3 +89,31 @@ func GetValidUriParams(c *gin.Context, params interface{}) error {
 	}
 	return nil
 }
+
+
+
+func GetValidJsonParams(c *gin.Context, params interface{}) error {
+	if err := c.ShouldBindJSON(params); err != nil {
+		return err
+	}
+	//获取验证器
+	valid, err := GetValidator(c)
+	if err != nil {
+		return err
+	}
+	//获取翻译器
+	trans, err := GetTranslation(c)
+	if err != nil {
+		return err
+	}
+	err = valid.Struct(params)
+	if err != nil {
+		errs := err.(validator.ValidationErrors)
+		sliceErrs := []string{}
+		for _, e := range errs {
+			sliceErrs = append(sliceErrs, e.Translate(trans))
+		}
+		return errors.New(strings.Join(sliceErrs, ","))
+	}
+	return nil
+}

@@ -76,11 +76,28 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	//		middleware.RequestLog(),
 	//		middleware.TranslationMiddleware())
 	//
+
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"message": "openservice_sit",
+			"message2": "cephalometrics",
 		})
 	})
+
+
+	router.GET("/xray/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "xray pong",
+		})
+	})
+
+	router.GET("/moli/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "moli pong",
+		})
+	})
+
+
 
 	//router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -95,6 +112,7 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 
 	{
 		controller.ExampleRegister(apiAuthGroup)
+		controller.XrayRegister(apiAuthGroup)
 	}
 
 	router.NoRoute(func(c *gin.Context) {

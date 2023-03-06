@@ -11,13 +11,12 @@ import (
 func main() {
 
 	//err := bootstrap.InitModule([]string{"base", "mysql", "redis", "mongodb"})
-	err := bootstrap.InitModule([]string{"base", "mysql", "redis"})
+	err := bootstrap.InitModule([]string{"base"})
 	if err != nil {
 		log.Println("bootstrap init env fail check it ",err)
 		os.Exit(1)
 	}
 	defer bootstrap.Destroy()
-
 	route := router.InitRouter()
 	server.HttpServerRun(route)
 

@@ -5,6 +5,7 @@ import (
 	"forest/pkg/log"
 	"forest/pkg/mysql"
 	"forest/pkg/redis"
+	"forest/pkg/utils"
 	"github.com/gookit/config/v2"
 	"time"
 )
@@ -46,21 +47,25 @@ func InitModule(modules []string) error {
 	log.Init(opts)
 	defer log.Flush()
 
-	if err = redis.InitRedisConf(config.String("redis.addr"),config.String("redis.password")); err != nil {
-		log.Fatalw("[ERROR] InitRedisDBPool: " , err.Error())
-		return err
-	}
+     if utils.InArrayString("redis", modules) {
+		 if err = redis.InitRedisConf(config.String("redis.addr"),config.String("redis.password")); err != nil {
+			 log.Fatalw("[ERROR] InitRedisDBPool: " , err.Error())
+			 return err
+		 }
+	 }
 
 	//初始化MySQL连接池
-
-	MysqlConf := &mysql.Conf{}
-	err = config.BindStruct("mysql",MysqlConf )
-	fmt.Println("=========bind",MysqlConf)
-	if err != nil {
-		log.Fatalw("[ERROR] InitMysqlDBPool: " , err.Error())
-		return err
+	if utils.InArrayString("mysql", modules) {
+		MysqlConf := &mysql.Conf{}
+		err = config.BindStruct("mysql", MysqlConf)
+		fmt.Println("=========bind", MysqlConf)
+		if err != nil {
+			log.Fatalw("[ERROR] InitMysqlDBPool: ", err.Error())
+			return err
+		}
+		mysql.InitMysqlPool(MysqlConf)
 	}
-	mysql.InitMysqlPool(MysqlConf)
+
 	log.Info("[INFO] success loading resources.")
 	log.Info("----------------------bootstrap end------------------------")
 	return nil
